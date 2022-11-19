@@ -25,7 +25,7 @@ DESCRIBE Role;
 CREATE TABLE IF NOT EXISTS Company(
 	company_name VARCHAR(255) NOT NULL,
     company_pay_frequency_days INT, # Wrote days in the attribute name for more clarity
-    phone_number VARCHAR(255), # Didn't make this NOT NULL because I don't think a company technically ~needs~ a phone number, even though it is a PK of Contact. Maybe mistaken here
+    phone_number VARCHAR(255) NOT NULL, # Not null because original is not null
 	PRIMARY KEY (company_name),
     FOREIGN KEY (phone_number)
 		REFERENCES Contact(phone_number)
@@ -37,7 +37,7 @@ DESCRIBE Company;
 
 CREATE TABLE IF NOT EXISTS EmployeeRole( # we have to use PascalCase for table names, but they are stored as lowercase. Can we instead use snake_case?
 	employee_id INT NOT NULL AUTO_INCREMENT,
-    role_id INT, # should we add a NOT NULL to this?
+    role_id INT NOT NULL, # should you add NOT NULL to attributes declared not null?
     PRIMARY KEY (employee_id),
     FOREIGN KEY (role_id) 
 		REFERENCES Role(role_id)
@@ -49,8 +49,8 @@ DESCRIBE EmployeeRole;
 
 CREATE TABLE IF NOT EXISTS Branch(
 	branch_id INT NOT NULL AUTO_INCREMENT,
-    phone_number VARCHAR(255),
-    company_name VARCHAR(255),
+    phone_number VARCHAR(255) NOT NULL,
+    company_name VARCHAR(255) NOT NULL,
     PRIMARY KEY (branch_id),
     FOREIGN KEY (phone_number)
 		REFERENCES Contact(phone_number)
@@ -67,8 +67,8 @@ DESCRIBE Branch;
 
 CREATE TABLE IF NOT EXISTS Employee(	
 	employee_id	INT NOT NULL AUTO_INCREMENT,
-	phone_number VARCHAR (255),
-	branch_id INT,
+	phone_number VARCHAR (255) NOT NULL,
+	branch_id INT NOT NULL,
 	employee_first_name VARCHAR (255),
     employee_last_name VARCHAR (255),
 	employee_start_date VARCHAR (255), 
@@ -103,7 +103,7 @@ DESCRIBE Employee;
 CREATE TABLE IF NOT EXISTS Payroll(
 	payroll_id INT NOT NULL AUTO_INCREMENT, # we'd have to have an obscene amount of employees to get past the 2.147 bn cap on INT. I don't think it's feasible
     payment_date DATE,
-    employee_id INT,
+    employee_id INT NOT NULL,
     payment_salary DECIMAL(8,2), # max value is 999,999.99
     payment_bonus DECIMAL(8,2),
     payment_status CHAR(1), # can be "t" or "f" depending on whether payment has been disbursed or not. Boolean was not in the slide on datatypes so don't want to risk getting marks deducted for it
@@ -119,7 +119,7 @@ DESCRIBE Payroll;
 
 CREATE TABLE IF NOT EXISTS TaxForm(
 	tax_form_id INT NOT NULL AUTO_INCREMENT,
-    employee_id INT,
+    employee_id INT NOT NULL,
     tax_year DATE, # will just be January 1st of the year (e.g. '2022-01-01'). There is a YEAR datatype but it is not in the slides so I don't want to risk getting marks deducted for it
     tax_form_url VARCHAR(255),
 	PRIMARY KEY (tax_form_id),
