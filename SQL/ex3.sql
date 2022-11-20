@@ -25,7 +25,8 @@ SELECT * FROM Contact;
 INSERT INTO Company VALUES (
 		"CompanyABC",
         14,
-        "519-326-3644"
+        "519-326-3644",
+        "company.com"
 );
 
 SELECT * FROM Company;

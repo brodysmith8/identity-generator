@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS Company(
 	company_name VARCHAR(255) NOT NULL,
     company_pay_frequency_days INT, # Wrote days in the attribute name for more clarity
     phone_number VARCHAR(255) NOT NULL, # Not null because original is not null
+    company_domain_name VARCHAR(255), # this just holds their domain name for emails
 	PRIMARY KEY (company_name),
     FOREIGN KEY (phone_number)
 		REFERENCES Contact(phone_number)
