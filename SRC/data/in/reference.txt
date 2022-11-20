@@ -1,2 +1,2 @@
-1. "canpc-geo-demo.csv" is a sample dataset from GreatData.com's "Canada ZIP Codes Database". Available: https://greatdata.com/product/canada-postal-code-database.
+1. NS and NL population from StatCan 2021 census. Available here: https://www150.statcan.gc.ca/t1/tbl1/en/cv.action?pid=9810000203 
 2. "street-names-and-frequency.csv" is a selection of data from StatCan's Road Network Files for the census year 2011. Available: https://www12.statcan.gc.ca/census-recensement/2011/geo/RNF-FRR/index-eng.cfm 
