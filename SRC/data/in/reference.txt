@@ -1,1 +1,2 @@
-File "canpc-geo-demo.csv" is a sample dataset from GreatData.com's "Canada ZIP Codes Database" at https://greatdata.com/product/canada-postal-code-database.
+1. "canpc-geo-demo.csv" is a sample dataset from GreatData.com's "Canada ZIP Codes Database". Available: https://greatdata.com/product/canada-postal-code-database.
+2. "street-names-and-frequency.csv" is a selection of data from StatCan's Road Network Files for the census year 2011. Available: https://www12.statcan.gc.ca/census-recensement/2011/geo/RNF-FRR/index-eng.cfm 
