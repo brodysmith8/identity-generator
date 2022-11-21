@@ -2,8 +2,8 @@
 import csv
 import string
 
-# A for NS, B for NL 
-first_letter = 'A'
+# A for NL, B for NS 
+first_letter = 'B'
 
 alphabet = list(string.ascii_uppercase)
 
@@ -13,7 +13,7 @@ def last_two_digits(a, h):
         h+=1
     return [res, h]
 
-f_name = '../newfoundland-population-modified.csv'
+f_name = '../nova-scotia-population-modified.csv'
 
 f = open(f_name)
 f_r = csv.reader(f, dialect='unix')

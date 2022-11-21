@@ -15,13 +15,11 @@ from generator import Generator
 
 # if we first generate a table of people with addresses we are good to do other stuff later
 
-n = int(sys.argv[1])  # how many records we generate
-[f, fw] = swap_file_writer('data/out/people.csv')
+gen = Generator(100)
+identities = gen.get_identities()
 
-time_before = time.time()
-identities = Generator(n).get_identities()
-time_end = time.time()
-print(f"total people generation time: {time_end - time_before:.2f} s")
+for line in identities:
+    print(line)
 
 # print people in the CSV to clear reference to people now so program uses less memory
 # print('outputting people batch to csv...')

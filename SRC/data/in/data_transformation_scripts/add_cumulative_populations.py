@@ -3,8 +3,8 @@
 
 import csv
 
-f = open('../source/newfoundland-population.csv')
-fwrite = open('../newfoundland-population-modified.csv', 'w')
+f = open('../source/nova-scotia-population.csv')
+fwrite = open('../nova-scotia-population-modified.csv', 'w')
 fw = csv.writer(fwrite, dialect="unix")
 copy = []
 
