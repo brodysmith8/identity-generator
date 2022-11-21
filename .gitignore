@@ -1,3 +1,4 @@
 *.pyc
 sandbox.py
 sandlessbox.py
+settings.json

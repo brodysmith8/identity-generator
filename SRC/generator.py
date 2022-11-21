@@ -3,9 +3,8 @@ import random
 import csv
 import generator_types as gt
 
-
 class ContactGenerator:
-    def __init__(self, n):
+    def __init__(self, n) -> None:
         self._n = n
         self.addresses = None  # should really declare all member variables eventually
         self.IdentitiesData = self._generate_identities()
