@@ -1,8 +1,11 @@
 from typing import NewType
 
-# not used in the generator; only used to compose plural types
+# singular types
 Person = NewType('Name', list[int, str]) # Person includes employee number
-Address = NewType('Address', list[int, int, str, str, str, str, str, int])
+
+# address: Suite_Number, Street_Number, Street_Name, City, Province, Post_Code,  Country
+Address = NewType('Address', list[int, int, str, str, str, str, str])
+
 Sin = NewType('Sin', int)
 Identity = NewType('Identity', list[Person, Address, Sin])
 
