@@ -15,11 +15,14 @@ from generator import Generator
 
 # if we first generate a table of people with addresses we are good to do other stuff later
 
-gen = Generator(100)
+gen = Generator(int(sys.argv[1]))
 identities = gen.get_identities()
 
 for line in identities:
     print(line)
+
+nl_to_ns, percent_error = gen.get_nl_to_ns_ratio()
+print(f'NL-to-NS ratio: {nl_to_ns:.2f}\nPercent Error: {percent_error:.2f}%')
 
 # print people in the CSV to clear reference to people now so program uses less memory
 # print('outputting people batch to csv...')

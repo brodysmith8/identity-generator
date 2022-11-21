@@ -195,8 +195,9 @@ class Generator:
         f_p = open('data/in/provinces.csv')
         fr_p = csv.reader(f_p, dialect="unix")
 
+        count_nl = 0
+        count_ns = 0
         for x in range(self._n):
-            # about 0.7% error, n = 5000
             rng = random.random()
             for line in fr_p:
                 if float(line[2]) > rng:
@@ -204,44 +205,37 @@ class Generator:
                     f_p.seek(0)
                     break
 
-            # about 3.6% error, n = 5000
-            # current_province = random.choices(population=["Nova Scotia", "Newfoundland and Labrador"], weights=[0.5228, 0.48])[0]
-
             rng = rng * 100  # once again will never reach 100%
-
             if current_province == 'Nova Scotia':
+                count_ns+=1
                 for line in fr_ns:
                     city_name, _, _, cumulative_population, fsa = line
-                    #print(f"\ncurrent line: {line}\ncurrent rng: {rng}\ncurrent cpop: {cumulative_population}")
                     if float(cumulative_population) > rng:
                         addresses[x][3] = city_name
                         addresses[x][4] = current_province
                         addresses[x][5] = fsa
-                        #print(f"current address: {addresses[x]}")
                         f_ns.seek(0)
                         break
             else:
+                count_nl+=1
                 for line in fr_nl:
                     city_name, _, _, cumulative_population, fsa = line
-                    #print(f"\ncurrent line: {line}\ncurrent rng: {rng}\ncurrent cpop: {cumulative_population}")
                     if float(cumulative_population) > rng:
                         addresses[x][3] = city_name
                         addresses[x][4] = current_province
                         addresses[x][5] = fsa
-                        #print(f"current address: {addresses[x]}")
                         f_nl.seek(0)
                         break
 
         f_nl.close()
         f_ns.close()
         f_p.close()
-
+        print(f'{count_nl} {count_ns}')
+        self.nl_to_ns_ratio = float(count_nl) / float(count_ns)
         fsa_ldu = dict() # { FSA : [generated LDUs] }
 
         for address in addresses:
-            print(f"addr: {address}")
             fsa = address[5]
-            print(f"fsa: {fsa}")
             if fsa in fsa_ldu: # at least one generated code
                 # (roughly) 1/3 chance of a new code generation
                 rng = random.random()
@@ -260,6 +254,10 @@ class Generator:
 
         return addresses
 
+    def get_nl_to_ns_ratio(self):
+        expected = 460993.0 / 969383.0
+        return [ self.nl_to_ns_ratio, abs(expected - self.nl_to_ns_ratio) / expected * 100 ]
+
     def _generate_identities(self) -> gt.Identities:
         self.people = self._generate_people()
         self.addresses = self._generate_addresses()
@@ -268,8 +266,16 @@ class Generator:
         arr = []
         for x in range(self._n):
             arr.append([
-                self.people[x],
-                self.addresses[x],
+                self.people[x][0],
+                self.people[x][1],
+                self.people[x][2],
+                self.addresses[x][0],
+                self.addresses[x][1],
+                self.addresses[x][2],
+                self.addresses[x][3],
+                self.addresses[x][4],
+                self.addresses[x][5],
+                self.addresses[x][6],
                 self.sins[x]])
 
         return arr
