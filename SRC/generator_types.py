@@ -7,10 +7,15 @@ Person = NewType('Name', list[int, str]) # Person includes employee number
 Address = NewType('Address', list[int, int, str, str, str, str, str])
 
 Sin = NewType('Sin', str)
-Identity = NewType('Identity', list[Person, Address, Sin])
+
+PhoneNumber = NewType('PhoneNumber', str)
+EmailAddress = NewType('EmailAddress', str)
+Identity = NewType('Identity', list[Person, PhoneNumber, EmailAddress, Address, Sin])
 
 # plural types
 People = NewType('Names', list[Person])
 Addresses = NewType('Addresses', list[Address])
 Sins = NewType('Sins', list[Sin])
+PhoneNumbers = NewType('PhoneNumber', list[str])
+EmailAddresses = NewType('EmailAddress', list[str])
 Identities = NewType('Identities', list[Identity])

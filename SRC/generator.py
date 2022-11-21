@@ -4,9 +4,10 @@ import csv
 import generator_types as gt
 
 
-class Generator:
+class ContactGenerator:
     def __init__(self, n):
         self._n = n
+        self.addresses = None  # should really declare all member variables eventually
         self.IdentitiesData = self._generate_identities()
 
     def __str___(self) -> str:  # toString
@@ -60,12 +61,10 @@ class Generator:
             "Yukon": "YT",
         }
 
-
         def intarr_to_strarr(int_arr):
             for num in range(len(int_arr)):
                 int_arr[num] = str(int_arr[num])
             return int_arr
-
 
         def starts_with(business, temp_res, province):
             prov = PROVINCES_LONG_TO_SHORT[province]
@@ -79,7 +78,6 @@ class Generator:
                 sin.append(PROVINCES[prov][0])
 
             return sin
-
 
         def luhn_checksum(sin):
             l = SIN_LENGTH
@@ -97,12 +95,10 @@ class Generator:
                 l -= 1
             return sum % 10
 
-
         def check_digit(sin_arr):
             sin_arr = intarr_to_strarr(sin_arr)
             checksum = luhn_checksum("".join(sin_arr) + "0")
             return 0 if checksum % 10 == 0 else (10 - checksum)
-
 
         sin_arr = starts_with(False, False, "Newfoundland and Labrador")
 
@@ -147,7 +143,8 @@ class Generator:
             return f'{f_let}{m_let}{l_num}'
 
         def generate_random_ldu():
-            return generate_ldu(f'{random.randint(0,3)}{chr(random.randint(65,90))}0') # kinda random ldu that isn't too high
+            # kinda random ldu that isn't too high
+            return generate_ldu(f'{random.randint(0,3)}{chr(random.randint(65,90))}0')
 
         addresses = []
 
@@ -207,7 +204,7 @@ class Generator:
 
             rng = rng * 100  # once again will never reach 100%
             if current_province == 'Nova Scotia':
-                count_ns+=1
+                count_ns += 1
                 for line in fr_ns:
                     city_name, _, _, cumulative_population, fsa = line
                     if float(cumulative_population) > rng:
@@ -217,7 +214,7 @@ class Generator:
                         f_ns.seek(0)
                         break
             else:
-                count_nl+=1
+                count_nl += 1
                 for line in fr_nl:
                     city_name, _, _, cumulative_population, fsa = line
                     if float(cumulative_population) > rng:
@@ -232,35 +229,115 @@ class Generator:
         f_p.close()
         print(f'{count_nl} {count_ns}')
         self.nl_to_ns_ratio = float(count_nl) / float(count_ns)
-        fsa_ldu = dict() # { FSA : [generated LDUs] }
+        fsa_ldu = dict()  # { FSA : [generated LDUs] }
 
         for address in addresses:
             fsa = address[5]
-            if fsa in fsa_ldu: # at least one generated code
+            if fsa in fsa_ldu:  # at least one generated code
                 # (roughly) 1/3 chance of a new code generation
                 rng = random.random()
-                if rng < 0.3334: 
-                    l_ldu = fsa_ldu[fsa][-1] # get last gen'd LDU
+                if rng < 0.3334:
+                    l_ldu = fsa_ldu[fsa][-1]  # get last gen'd LDU
                     n_ldu = generate_ldu(l_ldu)
                     fsa_ldu[fsa].append(n_ldu)
                     address[5] = f'{fsa} {n_ldu}'
                 else:
-                    l_ldu = fsa_ldu[fsa][-1] # get last gen'd LDU
+                    l_ldu = fsa_ldu[fsa][-1]  # get last gen'd LDU
                     address[5] = f'{fsa} {l_ldu}'
-            else: # generate a random LDU for the FSA
+            else:  # generate a random LDU for the FSA
                 ldu = generate_random_ldu()
                 fsa_ldu[fsa] = [ldu]
                 address[5] = f'{fsa} {ldu}'
 
         return addresses
 
+    def get_addresses(self) -> gt.Addresses:
+        return self._generate_addresses()
+
     def get_nl_to_ns_ratio(self):
         expected = 460993.0 / 969383.0
-        return [ self.nl_to_ns_ratio, abs(expected - self.nl_to_ns_ratio) / expected * 100 ]
+        return [self.nl_to_ns_ratio, abs(expected - self.nl_to_ns_ratio) / expected * 100]
+
+    # needs addresses to be run first
+    # this is terrible
+    def _generate_phone_numbers(self) -> gt.PhoneNumbers:
+        if self.addresses == None:
+            return
+
+        AREA_CODES = {
+            "Newfoundland and Labrador": "709",
+            "Nova Scotia": "902"
+        }
+        
+        # area code : { first3digits : {last4digits} } constant lookup time baybeeeee
+        digits = dict()
+
+        phone_numbers = []
+        for address in self.addresses:
+            prov = address[4]
+            curr_num = ""
+            for num in AREA_CODES[prov]:
+                curr_num += num
+
+            first = AREA_CODES[prov]
+            second = ""
+            third = ""
+
+            no_nums = 0
+
+            # first three digits
+            if curr_num in digits:
+                while (True):  # bad solution
+                    if no_nums == 1:
+                        break
+
+                    random_first_three = f'{random.randint(1,9)}{random.randint(0,9)}{random.randint(0,9)}'
+
+                    choice = random.choices([True, False], [3, 1])[0] # chance the number is the same (xxx) xxx-
+                    if choice or random_first_three in digits[curr_num]:
+                        # if the first three aren't already in the dictionary, pick a random one that is in the dictionary
+                        if not random_first_three in digits[curr_num]:
+                            random_first_three = random.choice(
+                                tuple(digits[curr_num]))  # this is a slow line
+
+                        # generate last four
+                        random_last_four = f'{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}'
+                        if random_last_four in digits[curr_num][random_first_three]:
+                            pass
+                        else:
+                            digits[curr_num][random_first_three].add(
+                                random_last_four)
+                            second = random_first_three
+                            third = random_last_four
+                            no_nums += 1
+
+                    else:
+                        digits[curr_num][random_first_three] = set()
+                        random_last_four = f'{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}'
+                        digits[curr_num][random_first_three].add(
+                            random_last_four)
+                        second = random_first_three
+                        third = random_last_four
+                        no_nums += 1
+                        break
+            else:
+                # don't make the first one too high
+                random_first_three = f'{random.randint(1,2)}{random.randint(0,5)}{random.randint(0,9)}'
+                digits[curr_num] = {random_first_three: set()}
+
+                random_last_four = f'{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}'
+                digits[curr_num][random_first_three].add(random_last_four)
+
+                second = random_first_three
+                third = random_last_four
+
+            phone_numbers.append(f'({first}) {second}-{third}') # 1:1 mapping with addresses
+        return phone_numbers
 
     def _generate_identities(self) -> gt.Identities:
         self.people = self._generate_people()
         self.addresses = self._generate_addresses()
+        self.phone_numbers = self._generate_phone_numbers()
         self.sins = self._generate_sins()
 
         arr = []
@@ -269,6 +346,7 @@ class Generator:
                 self.people[x][0],
                 self.people[x][1],
                 self.people[x][2],
+                self.phone_numbers[x],
                 self.addresses[x][0],
                 self.addresses[x][1],
                 self.addresses[x][2],
