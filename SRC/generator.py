@@ -360,3 +360,6 @@ class ContactGenerator:
 
     def get_identities(self) -> gt.Identities:
         return self.IdentitiesData
+
+    def get_identities_header(self) -> list[str]:
+        return [ "id", "first_name", "last_name", "phone_number", "suite_number", "street_number", "street_name", "city", "province", "postal_code", "country", "sin"] # use sin as seed for employee_number? 
