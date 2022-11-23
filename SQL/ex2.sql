@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS Contact(
 	phone_number VARCHAR(255) NOT NULL,
-    email_address VARCHAR(255),
+    email_address VARCHAR(255) UNIQUE,
     suite_number INT, 
     street_number INT,
     street_name VARCHAR(255), 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS Employee(
 	employee_first_name VARCHAR (255),
     employee_last_name VARCHAR (255),
 	employee_start_date VARCHAR (255), 
-    employee_sin VARCHAR (255), # data security needs to happen somehow 
+    employee_sin VARCHAR (255) UNIQUE, # data security needs to happen somehow 
     employee_bank_account_number VARCHAR (255),
     employee_bank_transit_number VARCHAR (255),
     employee_bank_institution_number VARCHAR (255), 
