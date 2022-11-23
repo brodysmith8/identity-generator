@@ -501,7 +501,7 @@ class ContactGenerator:
 
             if start_date <= datetime.date(2020, 1, 1): 
                 #validation = self._validate_employee(idx, start_date)
-                tax_forms.append([f'{853948 + idx_2}', idx + 1, 2020, self.start_dates[idx] ,f'https://nci.ca/taxes/{853948 + idx_2}_{2020}'])
+                tax_forms.append([f'{853948 + idx_2}', idx + 1, 2020, f'https://nci.ca/taxes/{853948 + idx_2}_{2020}'])
                 idx_2 +=1
             
             idx+=1
@@ -509,7 +509,7 @@ class ContactGenerator:
         for start_date in self.start_dates:
             if start_date <= datetime.date(2021, 1, 1):
                 #validation = self._validate_employee(idx, start_date)
-                tax_forms.append([f'{853948 + idx_2}', idx + 1, self.start_dates[idx] ,2021, f'https://nci.ca/taxes/{853948 + idx_2}_{2021}'])
+                tax_forms.append([f'{853948 + idx_2}', idx + 1, 2021, f'https://nci.ca/taxes/{853948 + idx_2}_{2021}'])
                 idx_2 +=1
             idx+=1
 
