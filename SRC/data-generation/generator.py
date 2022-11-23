@@ -444,10 +444,6 @@ class ContactGenerator:
     # get employee start date, generate a payroll object every company_pay_frequency, 
     # sort chronologically, assign payroll_ids, return
     def _generate_payrolls(self): 
-        # could generate a lot of data so writing to disk I think
-        # is safest than having everything in memory
-        f= open('data/out/payroll-items.csv', 'w')
-        fw = csv.writer(f, dialect="unix")
         company_pay_freq = self.cpf
         status = lambda x, y: "Pending Clearance" if (x - y).days < random.randint(1,4) else "Cleared" # between 1 and 4 business days :^)
 

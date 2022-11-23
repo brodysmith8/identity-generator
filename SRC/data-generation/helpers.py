@@ -93,21 +93,9 @@ class TimeAnalysis:
         while cp > 0:
             cp = int(cp / 10)
             digits +=1 
-# Stage                Time                                 % of Total
-# -------------------------------------------
             
         row_len = len(stats[0])
         print(f"\nStage{(max_str-5)*' '}{(6-digits)*' '}Time{(row_len - 35)*' '}% of Total\n{row_len*'-'}")
         for stat in stats:
             print(stat)
         print('\n')
-
-# Statistics
-# -------------------------------------------
-# Stage          Time   % of Total
-# Generation           0.23273 s      99.08 %
-# Writing              0.00059 s       0.25 %
-# Payroll Gen          0.00000 s       0.00 %
-# Payroll Writing      0.00134 s       0.57 %
-# TaxForm Gen          0.00000 s       0.00 %
-# TaxForm Writing      0.00023 s       0.10 %
