@@ -39,7 +39,7 @@ f_i_companies = open('data-generation/data/in/companies-with-address.csv')
 f_ir_companies = csv.reader(f_i_companies, dialect='unix')
 
 # Contact(phone_number, email_address, street_number, street_name, city, province, post_code, country)
-f_o = open('contact.csv', 'w')
+f_o = open('../contact.csv', 'w')
 f_ow = csv.writer(f_o, dialect="unix")
 
 f_ow.writerow(["phone_number", "email_address", "street_number", "street_name", "city", "province", "post_code", "country"])
@@ -63,7 +63,7 @@ f_ow.writerows(lines)
 f_o.close()
 
 # Role(Role_ID, Role_Name, Salary)
-f_o = open('role.csv', 'w')
+f_o = open('../role.csv', 'w')
 f_ow = csv.writer(f_o, dialect="unix")
 
 f_i_roles = open('data-generation/data/in/job-positions.csv')
@@ -78,7 +78,7 @@ f_i_roles.close()
 # already made
 
 # EmployeeRole(employee_id, role_id)
-f_o = open('employee_role.csv', 'w')
+f_o = open('../employee_role.csv', 'w')
 f_ow = csv.writer(f_o, dialect="unix")
 
 f_ow.writerow(["employee_id", "role_id"])
@@ -89,7 +89,7 @@ next(f_i_identities)
 f_o.close()
 
 # Branch(Branch_ID, Phone_Number, Company_Name)
-f_o = open('branch.csv', 'w')
+f_o = open('../branch.csv', 'w')
 f_ow = csv.writer(f_o, dialect="unix")
 
 f_ow.writerow(["branch_id", "phone_number", "company_name"])
@@ -99,7 +99,7 @@ f_i_branches.close()
 f_o.close()
 
 # Employee(Employee_ID, Phone_Number, Branch_ID, Employee_First_Name, Employee_Last_Name, Employee_Start_Date, Employee_SIN, Employee_Bank_Institution_Number, Employee_Bank_Transit_Number, Employee_Bank_Account_Number, Company_Name)
-f_o = open('employee.csv', 'w')
+f_o = open('../employee.csv', 'w')
 f_ow = csv.writer(f_o, dialect="unix")
 
 f_ow.writerow(["employee_id", "phone_number", "branch_id", "employee_first_name", "employee_last_name", "employee_start_date", "employee_sin", "employee_bank_institution_number", "employee_bank_transit_number", "employee_bank_account_number", "company_name"])
@@ -113,7 +113,7 @@ f_i_payrolls = open('data-generation/data/out/raw/payroll-items.csv')
 f_ir_payrolls = csv.reader(f_i_payrolls, dialect = 'unix')
 next(f_ir_payrolls)
 
-f_o = open('payroll.csv', 'w')
+f_o = open('../payroll.csv', 'w')
 f_ow = csv.writer(f_o, dialect='unix')
 
 f_ow.writerow(["payroll_id", "payment_date", "employee_id", "payment_salary", "payment_bonus", "payment_status"])
@@ -126,7 +126,7 @@ f_i_payrolls.close()
 f_i_tax_form = open('data-generation/data/out/raw/tax_forms.csv')
 f_ir_tax_form = csv.reader(f_i_tax_form, dialect="unix")
 
-f_o = open('tax_form.csv', 'w')
+f_o = open('../tax_form.csv', 'w')
 f_ow = csv.writer(f_o, dialect='unix')
 
 f_ow.writerow(["tax_form_id", "employee_id", "tax_year", "tax_form_url"])
