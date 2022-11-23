@@ -390,6 +390,7 @@ class ContactGenerator:
                 self.people[x][1], #    1. fname
                 self.people[x][2], #    2. lname
                 self.roles[x][0], #        3. job
+                self.roles[x][2], #        4. job id
                 self.addresses[x][0], # 4. st num
                 self.addresses[x][1], # 5. st name
                 self.addresses[x][2], # 6. city
@@ -414,17 +415,17 @@ class ContactGenerator:
         all_roles = []
         roles = []
         for role in fr:
-            all_roles.append([role[1], role[2]])
+            all_roles.append([role[1], role[2], role[0]])
         for line in range(self._n):
             rng = random.randint(0, len(all_roles) - 1)
-            roles.append([all_roles[rng][0], all_roles[rng][1]])
+            roles.append([all_roles[rng][0], all_roles[rng][1], all_roles[rng][2]])
         return roles
 
     def get_identities(self) -> gt.Identities:
         return self.IdentitiesData
 
     def get_identities_header(self):
-        return [ "id", "first_name", "last_name", "role_name", "street_number", "street_name", "city", "province", "postal_code", "country", "phone_number", "email_address", "sin", "company_name", "institution_number", "transit_number", "account_number", "start_date", "salary"] # use sin as seed for employee_number? 
+        return [ "employee_id", "first_name", "last_name", "role_name", "role_id", "street_number", "street_name", "city", "province", "postal_code", "country", "phone_number", "email_address", "sin", "company_name", "institution_number", "transit_number", "account_number", "start_date", "salary"] # salary as an attribute?
 
     def get_phone_numbers(self) -> gt.PhoneNumbers:
         return self.phone_numbers
@@ -476,7 +477,7 @@ class ContactGenerator:
         return self.payrolls
 
     def get_payroll_header(self):
-        return ["Payroll_ID", "Payment_Date", "Employee_ID", "Payment_Salary", "Payment_Bonus", "Payment_Status"]
+        return ["payroll_id", "payment_date", "employee_id", "payment_salary", "payment_bonus", "payment_status"]
 
     def _validate_employee(self, idx, start_date):
         return "Valid" if self.start_dates[idx] == start_date else "Invalid"
@@ -515,7 +516,7 @@ class ContactGenerator:
         return self.tax_forms
 
     def get_tax_form_header(self):
-        return ["Tax_Form_ID", "Employee_ID", "Tax_Year", "Tax_Form_URL"]
+        return ["tax_form_id", "employee_id", "tax_year", "tax_form_url"]
 
 class BranchGenerator:
     def __init__(self, n) -> None:
@@ -529,11 +530,13 @@ class BranchGenerator:
     def _generate_branches(self):
         # can edit emails for contact in here
         branches = []
+        gen_e_addr = lambda x: f'branch{x}@nci.ca'
         for x in range(self._n):
             branches.append([
                 x + 1, 
+                self.identities[x][14],
                 self.phone_nos[x], 
-                self.identities[x][13],
+                gen_e_addr(x+1),
                 self.addresses[x][0],
                 self.addresses[x][1],
                 self.addresses[x][2],
@@ -548,7 +551,7 @@ class BranchGenerator:
 
     def get_branch_header(self):
         # street num, street name, city, province, postal code, country
-        return ["id", "company_name", "phone_number", "street_number", "street_name", "city", "province", "postal_code", "country"]
+        return ["branch_id", "company_name", "phone_number", "email_address", "street_number", "street_name", "city", "province", "postal_code", "country"]
 
     def assign_branches(self, identities: gt.Identities):
         idx = 0
@@ -561,4 +564,4 @@ class BranchGenerator:
         return identities
 
     def get_identities_header(self) -> list[str]:
-        return ["id", "first_name", "last_name", "role_name", "street_number", "street_name", "city", "province", "postal_code", "country", "phone_number", "email_address", "sin", "company_name", "institution_number", "transit_number", "account_number", "start_date", "salary", "branch_id"]
+        return ["employee_id", "first_name", "last_name", "role_name", "role_id", "street_number", "street_name", "city", "province", "postal_code", "country", "phone_number", "email_address", "sin", "company_name", "institution_number", "transit_number", "account_number", "start_date", "salary", "branch_id"]
