@@ -381,10 +381,12 @@ class ContactGenerator:
         self.payrolls = self._generate_payrolls()
         self.tax_forms = self._generate_tax_forms()
 
-        gen_e_addr = lambda x, y: f'{x[0].lower()}{y.lower()}{random.randint(0,999)}@nci.ca'
+        gen_c_name = lambda: random.choice([["New Canada Incorporated", "@nci.ca"], ["Atlantic Canada Industries", "@aci.ca"], ["East Coast Beast Coast", "@ecbc.ca"], ["Abc Co.", "@abc.ca"], ["Old Canada Incorporated", "@oci.ca"]])
+        gen_e_addr = lambda x, y, z: f'{x[0].lower()}{y.lower()}{random.randint(0,999)}{z}'
         arr = []
         # Employee_ID, Phone_Number, Branch_ID, Employee_First_Name, Employee_Last_Name, Employee_Start_Date, Employee_SIN, Employee_Bank_Account_Number, Employee_Bank_Transit_Number, Employee_Bank_Institution_Number, Company_Name
         for x in range(self._n):
+            company = gen_c_name()
             arr.append([
                 self.people[x][0], #    0. job id
                 self.people[x][1], #    1. fname
@@ -398,9 +400,9 @@ class ContactGenerator:
                 self.addresses[x][4], # 8. post code
                 self.addresses[x][5], # 9. country
                 self.phone_numbers[x],#10. phone number
-                gen_e_addr(self.people[x][1], self.people[x][2]), # 11. email_address
+                gen_e_addr(self.people[x][1], self.people[x][2], company[1]), # 11. email_address
                 self.sins[x], # 12. sin number
-                "New Canada Incorporated", # 13. company_name
+                company[0], # 13. company_name
                 self.bank_numbers[x][0], # 14. institute number
                 self.bank_numbers[x][1], # 15. transit numberz
                 self.bank_numbers[x][2], # 16. account number
