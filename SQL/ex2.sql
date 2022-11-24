@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS Contact(
     province VARCHAR(255),
     post_code VARCHAR(255),
     country VARCHAR(255),
-    PRIMARY KEY (phone_number)
+    PRIMARY KEY (phone_number),
+    CONSTRAINT Check_Contact_Details CHECK (LEN(phone_number) = 14 AND LEN(post_code) = 7)
 );
 
 DESCRIBE Contact;
