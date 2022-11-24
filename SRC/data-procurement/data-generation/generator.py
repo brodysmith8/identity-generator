@@ -11,6 +11,7 @@ class ContactGenerator:
         self.cpf = company_pay_frequency
         self.addresses = None  # should really declare all member variables eventually
         self.IdentitiesData = self._generate_identities()
+        self.tax_forms = self._generate_tax_forms()
 
     def __str___(self) -> str:  # toString
         return str(id)
@@ -371,15 +372,32 @@ class ContactGenerator:
         return dates
 
     def _generate_identities(self) -> gt.Identities:
+        t = h.TimeAnalysis()
+        t.new_stage("People")
         self.people = self._generate_people()
+        t.end_stage()
+        t.new_stage("Addresses")
         self.addresses = self._generate_addresses()
+        t.end_stage()
+        t.new_stage("Phone Numbers")
         self.phone_numbers = self._generate_phone_numbers()
+        t.end_stage()
+        t.new_stage("SINs")
         self.sins = self._generate_sins()
+        t.end_stage()
+        t.new_stage("Roles")
         self.roles = self._generate_job_titles()
+        t.end_stage()
+        t.new_stage("Bank Numbers")
         self.bank_numbers = self._generate_bank_numbers()
+        t.end_stage()
+        t.new_stage("Start Dates")
         self.start_dates = self._generate_start_dates()
+        t.end_stage()
+        t.new_stage("Payrolls")
         self.payrolls = self._generate_payrolls()
-        self.tax_forms = self._generate_tax_forms()
+        t.end_stage()
+        self._t = t
 
         gen_c_name = lambda: random.choice([["New Canada Incorporated", "@nci.ca"], ["Atlantic Canada Industries", "@aci.ca"], ["East Coast Beast Coast", "@ecbc.ca"], ["Abc Co.", "@abc.ca"], ["Old Canada Incorporated", "@oci.ca"]])
         gen_e_addr = lambda x, y, z: f'{x[0].lower()}{y.lower()}{random.randint(0,999)}{z}'
@@ -410,6 +428,9 @@ class ContactGenerator:
             ])
 
         return arr
+
+    def get_time(self) -> h.TimeAnalysis:
+        return self._t
 
     def _generate_job_titles(self) -> gt.Roles:
         f = open('data/in/job-positions.csv')
@@ -493,6 +514,7 @@ class ContactGenerator:
         idx_2 = 0
         start_dates = {}
         for start_date in self.start_dates:
+            e = self.IdentitiesData[idx][12].split("@")[1]
             if start_date.year in start_dates:
                 start_dates[start_date.year] +=1
             else:
@@ -500,7 +522,7 @@ class ContactGenerator:
 
             if start_date <= datetime.date(2020, 1, 1): 
                 #validation = self._validate_employee(idx, start_date)
-                tax_forms.append([f'{853948 + idx_2}', idx + 1, 2020, f'https://nci.ca/taxes/{853948 + idx_2}_{2020}'])
+                tax_forms.append([f'{853948 + idx_2}', idx + 1, 2020, f'https://{e}/taxes/{853948 + idx_2}_{2020}'])
                 idx_2 +=1
             
             idx+=1
@@ -508,7 +530,7 @@ class ContactGenerator:
         for start_date in self.start_dates:
             if start_date <= datetime.date(2021, 1, 1):
                 #validation = self._validate_employee(idx, start_date)
-                tax_forms.append([f'{853948 + idx_2}', idx + 1, 2021, f'https://nci.ca/taxes/{853948 + idx_2}_{2021}'])
+                tax_forms.append([f'{853948 + idx_2}', idx + 1, 2021, f'https://{e}/taxes/{853948 + idx_2}_{2021}'])
                 idx_2 +=1
             idx+=1
 
@@ -532,13 +554,13 @@ class BranchGenerator:
     def _generate_branches(self):
         # can edit emails for contact in here
         branches = []
-        gen_e_addr = lambda x: f'branch{x}@nci.ca'
+        gen_e_addr = lambda x: f'branch{x}@{self.identities[x][12].split("@")[1]}'
         for x in range(self._n):
             branches.append([
                 x + 1, 
                 self.identities[x][14],
                 self.phone_nos[x], 
-                gen_e_addr(x+1),
+                gen_e_addr(x),
                 self.addresses[x][0],
                 self.addresses[x][1],
                 self.addresses[x][2],

@@ -39,6 +39,8 @@ class TimeAnalysis:
         self.stages = [] # [ [stage_name, stage_time] ] 
         self.stage_names = set()
         self.current_stage = 0
+        self._parent = None
+        self._child = None
         self.max_entry = 0
 
     def new_stage(self, stage_name: str) -> None:
@@ -69,14 +71,20 @@ class TimeAnalysis:
 
     def get_stats(self) -> list[str]:
         ret = []
-        max = self.max_entry
         sum = 0
         for stage in self.stages:
             sum += stage[1]
 
         for stage in self.stages:
-            ret.append(f'{stage[0]:{max if max >= 5 else 5}}{float(stage[1])/1e9:13.5f} s{(stage[1] / sum * 100.0):11.2f} %')
+            ret.append([stage[0], float(stage[1])/1e9, stage[1] / sum * 100.0])
         return ret
+    
+    def get_parent(self):
+        return self._parent
+
+    def add_child(self, child, parent_stage):
+        self._child = child
+        self._child._parent = parent_stage
 
     def print_stats(self) -> None:
         stats = self.get_stats()
@@ -94,8 +102,17 @@ class TimeAnalysis:
             cp = int(cp / 10)
             digits +=1 
             
-        row_len = len(stats[0])
+        max = self.max_entry
+        row_len = 43
         print(f"\nStage{(max_str-5)*' '}{(6-digits)*' '}Time{(row_len - 35)*' '}% of Total\n{row_len*'-'}")
         for stat in stats:
-            print(stat)
+            if self._child != None:
+                if stat[0] == self._child.get_parent():
+                    print(f'{stat[0]:{max if max >= 5 else 5}}{stat[1]:13.5f} s{stat[2]:11.2f} %')
+                    for s in self._child.get_stats():
+                        print(f'> {s[0]:{max -1 if max -1 >= 4 else 4}}{s[1]:13.5f} s{s[2]:11.2f} %')
+                else: 
+                    print(f'{stat[0]:{max if max >= 5 else 5}}{stat[1]:13.5f} s{stat[2]:11.2f} %')
+            else:
+                print(f'{stat[0]:{max if max >= 5 else 5}}{stat[1]:13.5f} s{stat[2]:11.2f} %')
         print('\n')

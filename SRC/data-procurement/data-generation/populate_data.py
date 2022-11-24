@@ -18,7 +18,7 @@ t = TimeAnalysis()
 f = open('data/out/raw/branches-with-contact.csv', 'w')
 fw = csv.writer(f, dialect="unix")
 
-branch_gen = BranchGenerator(10)
+branch_gen = BranchGenerator(300)
 branches = branch_gen.get_branches()
 
 fw.writerow(branch_gen.get_branch_header())
@@ -33,6 +33,7 @@ t.new_stage("Generation")
 contact_gen = ContactGenerator(int(sys.argv[1]), int(sys.argv[2])) # second one is company_pay_freq
 contacts = contact_gen.get_identities()
 t.end_stage()
+t.add_child(contact_gen.get_time(), "Generation")
 
 contacts = branch_gen.assign_branches(contacts)
 t.new_stage("Writing")
@@ -43,9 +44,7 @@ t.end_stage()
 
 f= open('data/out/raw/payroll-items.csv', 'w')
 fw = csv.writer(f, dialect="unix")
-t.new_stage("Payroll Gen")
 payrolls = contact_gen.get_payrolls()
-t.end_stage()
 
 t.new_stage("Payroll Writing")
 fw.writerow(contact_gen.get_payroll_header())
@@ -57,9 +56,7 @@ f.close()
 f = open('data/out/raw/tax_forms.csv', 'w')
 fw = csv.writer(f, dialect='unix')
 
-t.new_stage("TaxForm Gen")
 tax_forms = contact_gen.get_tax_forms()
-t.end_stage()
 
 t.new_stage("TaxForm Writing")
 fw.writerow(contact_gen.get_tax_form_header())
